@@ -1,5 +1,4 @@
 import express from "express";
-import Mongoose from "mongoose";
 import { RecipeModal } from "../modals/recipe.modals.js";
 import { UserModal } from "../modals/user.modals.js";
 import { verifyToken } from "./users.js";
@@ -9,6 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     try {
         const response = await RecipeModal.find({});
+        // console.log(response);
         res.json(response);
     } catch (err) {
         res.json(err);
@@ -19,6 +19,7 @@ router.post("/", verifyToken, async (req, res) => {
     const recipe = new RecipeModal(req.body);
     try {
         const response = await recipe.save();
+        console.log(response);
         res.json(response);
     } catch (err) {
         console.log(err);
@@ -32,7 +33,7 @@ router.put("/", verifyToken, async (req, res) => {
         const user = await UserModal.findById(req.body.userID);
         user.savedRecipies.push(recipe);
         await user.save();
-        res.json({ savedRecipies: user.savedRecipies });
+        res.json({ savedRecipies: user?.savedRecipies });
     } catch (err) {
         res.json(err);
     }

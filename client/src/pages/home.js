@@ -4,15 +4,15 @@ import useGetUserID from '../hooks/useGetUserID.js';
 import { useCookies } from "react-cookie";
 
 const Home = () => {
-    const [recipes, setRecipies] = useState([]);
-    const [savedRecipes, setSavedRecipies] = useState([]);
+    const [recipies, setRecipies] = useState([]);
+    const [savedRecipies, setSavedRecipies] = useState([]);
     const [cookies, _] = useCookies(["access_token"]);
-    const userId = useGetUserID();
+    const userID = useGetUserID();
 
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/recipes");
+                const response = await axios.get("http://localhost:3001/recipies");
                 setRecipies(response.data);
             } catch (error) {
                 console.log(error);
@@ -21,8 +21,9 @@ const Home = () => {
 
         const fetchSavedRecipe = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/readRecipies/ids/${userId}`);
-                setSavedRecipies(response.data);
+                const response = await axios.get(`http://localhost:3001/recipies/readRecipies/ids/${userID}`);
+                // console.log(response.data);
+                setSavedRecipies(response.data.savedRecipies);
             } catch (error) {
                 console.log(error);
             }
@@ -34,29 +35,31 @@ const Home = () => {
 
     const saveRecipe = async (recipeID) => {
         try {
-            const response = await axios.put("http://localhost:3001/recipes",
-                { recipeID, userId },
-                { headers: { authorization: window.localStorage.getItem("access_token") } }
+            console.log("Attempting to save recipe with ID:", recipeID);
+            const response = await axios.put("http://localhost:3001/recipies",
+                { recipeID, userID },
+                { headers: { authorization: cookies.access_token } }
             );
-            console.log(response.data.savedRecipes);
-            setSavedRecipies(response.data.savedRecipes);
+            console.log("Backend response:", response.data.savedRecipies);
+            setSavedRecipies(response.data.savedRecipies);
         } catch (error) {
             console.log(error);
         }
     };
 
-    const isRecipeSaved = (id) => savedRecipes.includes(id);
+    const isRecipeSaved = (id) => savedRecipies?.includes(id) ?? false;
 
     return (
         <div>
             <h2>Recipies</h2>
             <ul>
-                {recipes.map((recipe) => (
+                {recipies.map((recipe) => (
                     <li key={recipe._id}>
                         <div>
                             <h2>{recipe.name}</h2>
                             <button
                                 onClick={() => saveRecipe(recipe._id)}
+                                disabled={isRecipeSaved(recipe._id)}
                             >
                                 {isRecipeSaved(recipe._id) ? "Saved" : "Save"}
                             </button>

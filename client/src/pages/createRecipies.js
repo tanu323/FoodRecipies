@@ -36,7 +36,7 @@ const CreateRecipies = () => {
         event.preventDefault();
         try {
             await axios.post("http://localhost:3001/recipies", recipe,
-                { headers: { authorization: window.localStorage.getItem("access_token") } });
+                { headers: { authorization: cookies.access_token } });
             alert("Recipe created");
             navigate("/");
         } catch (error) {
@@ -62,7 +62,7 @@ const CreateRecipies = () => {
                         name="ingredients"
                         value={ingredient}
                         onChange={(event) => handleIngredientChange(event, i)} />
-                ))};
+                ))}
                 <button onClick={addIngredient} type="button">Add Ingredient</button>
 
 

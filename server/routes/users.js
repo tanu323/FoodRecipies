@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
 
     // If user tries to register with an existing username
     if (user) {
-        return res.json({ message: ` Please Resgister with a new login name ${user} already exists` })
+        return res.json({ message: ` Please Resgister with a new login name ${userName} already exists` })
     }
 
     // When user users a new username
@@ -47,6 +47,8 @@ router.post("/login", async (req, res) => {
 
 });
 
+export { router as userRouter };
+
 export const verifyToken = (req, res, next) => {
     const token = req.headers.authorization;
     if (token) {
@@ -61,4 +63,3 @@ export const verifyToken = (req, res, next) => {
     }
 };
 
-export { router as userRouter };

@@ -4,14 +4,15 @@ import useGetUserID from '../hooks/useGetUserID.js';
 
 const
     ReadRecipies = () => {
-        const [savedrecipes, setSavedRecipies] = useState([]);
-        const userId = useGetUserID();
+        const [savedRecipies, setSavedRecipies] = useState([]);
+        const userID = useGetUserID();
 
         useEffect(() => {
             const fetchSavedRecipe = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:3001/readRecipies/${userId}`);
-                    setSavedRecipies(response.data);
+                    const response = await axios.get(`http://localhost:3001/recipies/readRecipies/${userID}`);
+                    console.log(response);
+                    setSavedRecipies(response.data.savedRecipies);
                 } catch (error) {
                     console.log(error);
                 }
@@ -21,9 +22,9 @@ const
 
         return (
             <div>
-                <h2>Your Recipies</h2>
+                <h2>Your Bookmarked Recipies</h2>
                 <ul>
-                    {savedrecipes.map((recipe) => (
+                    {savedRecipies.map((recipe) => (
                         <li key={recipe._id}>
                             <div>
                                 <h2>{recipe.name}</h2>
