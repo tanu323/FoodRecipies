@@ -19,6 +19,7 @@ const CreateRecipies = () => {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setRecipe({ ...recipe, [name]: value });
+        console.log(recipe);
     }
 
     const addIngredient = () => {
@@ -36,11 +37,12 @@ const CreateRecipies = () => {
         event.preventDefault();
         try {
             await axios.post("http://localhost:3001/recipies", recipe,
-                { headers: { authorization: cookies.access_token } });
+                { headers: { Authorization: cookies.access_token } });
             alert("Recipe created");
             navigate("/");
         } catch (error) {
-            console.log(error);
+            console.error("Error creating recipe:", error);
+            alert("Failed to create recipe. Please try again.");
         }
     };
 

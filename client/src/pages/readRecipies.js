@@ -11,8 +11,10 @@ const
             const fetchSavedRecipe = async () => {
                 try {
                     const response = await axios.get(`http://localhost:3001/recipies/readRecipies/${userID}`);
-                    console.log(response);
-                    setSavedRecipies(response.data.savedRecipies);
+                    console.log("saved recipe: ", response.data.savedRecipies);
+                    if (response.data && response.data.savedRecipies) {
+                        setSavedRecipies(response.data.savedRecipies);
+                    }
                 } catch (error) {
                     console.log(error);
                 }
